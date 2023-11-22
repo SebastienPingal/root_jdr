@@ -1,0 +1,151 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Nature {
+  id          Int          @id @default(autoincrement())
+  name        String
+  description String
+  livrets     Livret[]
+  personnages Personnage[]
+}
+
+model Motivation {
+  id          Int          @id @default(autoincrement())
+  name        String
+  description String
+  livrets     Livret[]
+  personnages Personnage[]
+}
+
+model Manoeuvre {
+  id          Int          @id @default(autoincrement())
+  name        String
+  description String
+  livrets     Livret[]
+  personnages Personnage[]
+}
+
+model Relation {
+  id          Int          @id @default(autoincrement())
+  name        String
+  description String
+  livrets     Livret[]
+  personnages Personnage[]
+}
+
+model Tour_de_crapule {
+  id          Int          @id @default(autoincrement())
+  name        String
+  livrets     Livret[]
+  personnages Personnage[]
+}
+
+model Aspect {
+  id          Int          @id @default(autoincrement())
+  name        String
+  equipements Equipement[]
+}
+
+model Manoeuvre_martiale {
+  id          Int          @id @default(autoincrement())
+  name        String
+  livrets     Livret[]
+  personnages Personnage[]
+  equipements Equipement[]
+}
+
+model Portee {
+  id          Int          @id @default(autoincrement())
+  name        String
+  equipements Equipement[]
+}
+
+model Faction {
+  id          Int          @id @default(autoincrement())
+  name        String
+  reputations Reputation[]
+}
+
+model Livret {
+  id                   Int                  @id @default(autoincrement())
+  name                 String
+  motivations          Motivation[]
+  natures              Nature[]
+  relations            Relation[]
+  manoeuvres           Manoeuvre[]
+  tours_de_crapule     Tour_de_crapule[]
+  manoeuvres_martiales Manoeuvre_martiale[]
+  personnages          Personnage[]
+}
+
+model Personnage {
+  id                    Int                  @id @default(autoincrement())
+  name                  String
+  espece                String
+  details               String?
+  livret                Livret               @relation(fields: [livretId], references: [id])
+  motivations           Motivation[]
+  nature                Nature               @relation(fields: [natureId], references: [id])
+  relations             Relation[]
+  related_personnages   Personnage[]         @relation("PersonnageToPersonnage")
+  related_to_personnage Personnage[]         @relation("PersonnageToPersonnage")
+  manoeuvres            Manoeuvre[]
+  tours_de_crapule      Tour_de_crapule[]
+  manoeuvres_martiales  Manoeuvre_martiale[]
+  blessures             Int                  @default(0)
+  blessures_max         Int                  @default(4)
+  epuisement            Int                  @default(0)
+  epuisement_max        Int                  @default(4)
+  denuement             Int                  @default(0)
+  denuement_max         Int                  @default(4)
+  porte                 Int                  @default(0)
+  charge                Int                  @default(4)
+  charge_max            Int                  @default(8)
+  livretId              Int
+  natureId              Int
+  reputations           Reputation[]
+  equipements           Equipement[]
+  campagne             campagne             @relation(fields: [campagneId], references: [id])
+  campagneId           Int
+}
+
+model Reputation {
+  id           Int        @id @default(autoincrement())
+  personnage   Personnage @relation(fields: [personnageId], references: [id])
+  personnageId Int
+  faction      Faction    @relation(fields: [factionId], references: [id])
+  factionId    Int
+  value        Int
+  prestige     Int
+  defaveur     Int
+}
+
+model Equipement {
+  id                  Int                  @id @default(autoincrement())
+  name                String
+  valeur              Int
+  personnage          Personnage?           @relation(fields: [personnageId], references: [id])
+  personnageId        Int?
+  charges             Int
+  usure               Int
+  usure_max           Int                  @default(1)
+  aspects             Aspect[]
+  portees             Portee[]
+  manoeuvre_martiales Manoeuvre_martiale[]
+}
+
+model campagne {
+  id          Int          @id @default(autoincrement())
+  name        String
+  description String
+  personnages Personnage[]
+}
