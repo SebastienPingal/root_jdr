@@ -89,12 +89,12 @@ model Livret {
 
 model Personnage {
   id                    Int                  @id @default(autoincrement())
-  name                  String
-  espece                String
+  name                  String?
+  espece                String?
   details               String?
-  livret                Livret               @relation(fields: [livretId], references: [id])
+  livret                Livret?               @relation(fields: [livretId], references: [id])
   motivations           Motivation[]
-  nature                Nature               @relation(fields: [natureId], references: [id])
+  nature                Nature?               @relation(fields: [natureId], references: [id])
   relations             Relation[]
   related_personnages   Personnage[]         @relation("PersonnageToPersonnage")
   related_to_personnage Personnage[]         @relation("PersonnageToPersonnage")
@@ -110,11 +110,11 @@ model Personnage {
   porte                 Int                  @default(0)
   charge                Int                  @default(4)
   charge_max            Int                  @default(8)
-  livretId              Int
-  natureId              Int
+  livretId              Int?
+  natureId              Int?
   reputations           Reputation[]
   equipements           Equipement[]
-  campagne             campagne             @relation(fields: [campagneId], references: [id])
+  campagne             Campagne             @relation(fields: [campagneId], references: [id])
   campagneId           Int
 }
 
@@ -143,7 +143,7 @@ model Equipement {
   manoeuvre_martiales Manoeuvre_martiale[]
 }
 
-model campagne {
+model Campagne {
   id          Int          @id @default(autoincrement())
   name        String
   description String
